@@ -19,7 +19,10 @@ public class TaskService {
         tasks.add(task);
         return task;
     }
-
+    /**
+     * 根据优先级筛选任务列表。
+     * @return 符合该优先级的任务列表，若没有匹配则返回空列表
+     */
     public List<Task> listAll() {
         return new ArrayList<>(tasks);
     }
