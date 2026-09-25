@@ -25,7 +25,7 @@ class TaskServiceTest {
         assertEquals("完成需求评审", task.getTitle());
         assertFalse(task.isCompleted());
         assertEquals(1, service.listAll().size());
-        // 验收标准：默认MEDIUM
+        // 你的验收标准：默认MEDIUM
         assertEquals(Priority.MEDIUM, task.getPriority());
     }
 
@@ -34,7 +34,9 @@ class TaskServiceTest {
         assertThrows(IllegalArgumentException.class, () -> service.addTask("   "));
     }
 
-    // 验收标准：空结果返回空列表
+    // ==========================================
+    // 以下是你自己分支的测试（优先级筛选）
+    // ==========================================
     @Test
     void shouldReturnEmptyListWhenNoMatchingPriority() {
         service.addTask("普通任务"); // 默认 MEDIUM
@@ -42,7 +44,6 @@ class TaskServiceTest {
         assertTrue(highTasks.isEmpty());
     }
 
-    // 验收标准：测试覆盖（按优先级筛选命中）
     @Test
     void shouldFilterTasksByPriority() {
         Task highTask = service.addTask("高优先级任务");
@@ -55,4 +56,27 @@ class TaskServiceTest {
         assertEquals("高优先级任务", service.filterByPriority(Priority.HIGH).get(0).getTitle());
         assertEquals(1, service.filterByPriority(Priority.LOW).size());
     }
+
+    // ==========================================
+    // 以下是远程 main 分支合并进来的测试（开发者B的完成任务测试）
+    // ==========================================
+    @Test
+    void shouldCompleteTask() {
+        Task task = service.addTask("待完成任务");
+        service.completeTask(task.getId());
+        assertTrue(task.isCompleted());
+    }
+
+    @Test
+    void shouldThrowWhenCompletingNonExistentTask() {
+        assertThrows(IllegalArgumentException.class, () -> service.completeTask(999L));
+    }
+
+    @Test
+    void shouldThrowWhenCompletingAlreadyCompletedTask() {
+        Task task = service.addTask("重复完成任务");
+        service.completeTask(task.getId());
+        assertThrows(IllegalStateException.class, () -> service.completeTask(task.getId()));
+    }
 }
+

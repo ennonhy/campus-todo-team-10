@@ -21,16 +21,31 @@ public class TaskService {
     }
 
     public List<Task> listAll() {
-        // 返回副本以保护内部状态
         return new ArrayList<>(tasks);
     }
 
-    // 新增功能：按优先级筛选
+    // ==========================================
+    // 以下是远程 main 分支合并进来的代码（开发者B的完成任务功能）
+    // ==========================================
+    public void completeTask(long id) {
+        Task task = tasks.stream()
+            .filter(t -> t.getId() == id)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
+
+        if (task.isCompleted()) {
+            throw new IllegalStateException("Task is already completed");
+        }
+        task.setCompleted(true);
+    }
+
+    // ==========================================
+    // 以下是你自己分支的代码（优先级筛选功能）
+    // ==========================================
     public List<Task> filterByPriority(Priority priority) {
         if (priority == null) {
             throw new IllegalArgumentException("Priority cannot be null");
         }
-        // 验收标准：空结果返回空列表
         return tasks.stream()
             .filter(task -> task.getPriority() == priority)
             .collect(Collectors.toList());
