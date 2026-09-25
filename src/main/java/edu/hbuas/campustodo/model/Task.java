@@ -1,54 +1,28 @@
 package edu.hbuas.campustodo.model;
 
-import java.util.Objects;
-
-/** 校园待办任务。
- */
 public class Task {
-    private final long id;
-    private final String title;
+    private long id;
+    private String title;
     private boolean completed;
+    private Priority priority;
 
     public Task(long id, String title) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("任务编号必须为正数");
-        }
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("任务标题不能为空");
-        }
         this.id = id;
-        this.title = title.trim();
+        this.title = title;
+        this.completed = false;
+        // 验收标准：默认 MEDIUM
+        this.priority = Priority.MEDIUM;
     }
 
-    public long getId() {
-        return id;
-    }
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public boolean isCompleted() {
-        return completed;
-    }
+    public boolean isCompleted() { return completed; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
 
-    public void complete() {
-        completed = true;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Task task)) {
-            return false;
-        }
-        return id == task.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    public Priority getPriority() { return priority; }
+    public void setPriority(Priority priority) { this.priority = priority; }
 }
